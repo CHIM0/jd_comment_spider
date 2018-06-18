@@ -16,7 +16,7 @@ class Spider():
             full_web_url = self.url1 + str(i) + self.url3
             r = request.urlopen(full_web_url)
             html = r.read()
-            html = str(html,encoding='gbk')
+            html = str(html,encoding='GBK')
             json_data = json.loads(html[26:-2])
 
             if json_data['comments'] == [] :
@@ -39,7 +39,7 @@ class Spider():
 
 
     def run(self):
-        self.__get_content(10)
+        self.__get_content(40)
 
 spider=Spider()
 spider.run()

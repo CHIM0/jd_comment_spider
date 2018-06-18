@@ -31,7 +31,7 @@ count_words=count_words.reset_index().sort_values(by=["num"], ascending=False)
 #词云展示
 RGB_coloring =numpy.array(Image.open(path.join("RGB.png")))
 image_colors = ImageColorGenerator(RGB_coloring)
-wordcloud=WordCloud(color_func=get_single_color_func('white'),font_path="simhei.ttf",background_color="white",max_font_size=300,height=800,width=1000,random_state=None) #指定字体类型、字体大小和字体颜色
+wordcloud=WordCloud(color_func=get_single_color_func('red'),font_path="simhei.ttf",background_color="white",max_font_size=300,height=800,width=1000,random_state=None) #指定字体类型、字体大小和字体颜色
 word_frequence = {x[0]:x[1] for x in count_words.head(400).values}
 wordcloud=wordcloud.fit_words(word_frequence)
 plt.imshow(wordcloud,interpolation="bilinear")
