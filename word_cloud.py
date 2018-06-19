@@ -8,26 +8,34 @@ import matplotlib
 from os import path
 from PIL import Image
 
+def add_stopword(str1,stopwords):
+    s = pd.Series({'stopword':str1})
+    stopwords = stopwords.append(s, ignore_index=True)
+    return stopwords
+
+
 matplotlib.rcParams['figure.figsize'] = (10.0, 5.0)
 file1 = open("D:\\PycharmProject\\spider\\comment\\allcomment.txt", 'r')
 xt = file1.read()
 pattern = re.compile(r'[\u4e00-\u9fa5]+')
 filedata = re.findall(pattern, xt)
-xx = ''.join(filedata)
+finaldata = ''.join(filedata)
 file1.close()
 #读取文件
 file2 = open("D:\\PycharmProject\\spider\\comment\\allcomment1.txt", 'w')
-file2.write(xx)
-clear = jieba.cut(xx)
+file2.write(finaldata)
+clear = jieba.cut(finaldata)
 cleared = pd.DataFrame({'clear': list(clear)})
 #print(clear)
 stopwords = pd.read_csv("chineseStopWords.txt", index_col=False, quoting=3, sep="\t", names=['stopword'], encoding='GBK')
+#添加额外停止词
+stopwords = add_stopword("手机",stopwords)
+# print(str(stopwords))
 cleared = cleared[~cleared.clear.isin(stopwords.stopword)]
-#print(std)
 #清洗数据
 count_words=cleared.groupby(by=['clear'])['clear'].agg({"num": numpy.size})
 count_words=count_words.reset_index().sort_values(by=["num"], ascending=False)
-#print(count_words)
+
 #词云展示
 RGB_coloring =numpy.array(Image.open(path.join("RGB.png")))
 image_colors = ImageColorGenerator(RGB_coloring)
@@ -38,3 +46,7 @@ plt.imshow(wordcloud,interpolation="bilinear")
 # plt.imshow(wordcloud.recolor(color_func=get_single_color_func('white')),interpolation="bilinear")
 plt.axis("off")
 plt.show()
+
+#词频统计
+for y in count_words.head(20).values:
+    print(str(y[0])+":"+str(y[1]))
