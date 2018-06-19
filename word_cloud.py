@@ -48,5 +48,10 @@ plt.axis("off")
 plt.show()
 
 #词频统计
+file3 = open("D:\\PycharmProject\\spider\\comment\\word_counting.txt",'w')
+file3.write("词频统计结果：\n")
+file3.close()
+file3 = open("D:\\PycharmProject\\spider\\comment\\word_counting.txt",'a')
 for y in count_words.head(20).values:
-    print(str(y[0])+":"+str(y[1]))
+    file3.write(str(y[0])+":"+str(y[1])+"\n")
+file3.close()
