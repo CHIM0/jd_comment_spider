@@ -3,7 +3,7 @@ import json
 import re
 
 class Spider():
-    url1='https://sclub.jd.com/comment/productPageComments.action?callback=fetchJSON_comment98vv2789&productId=7621213&score=0&sortType=5&page='
+    url1='https://sclub.jd.com/comment/productPageComments.action?callback=fetchJSON_comment98vv2789&productId=7621213&score=1&sortType=5&page='
     url3='&pageSize=10&isShadowSku=0&fold=1'
     u1 = "D:\\PycharmProject\\spider\\comment\\comment_page_"
     u3 = ".json"

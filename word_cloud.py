@@ -30,6 +30,7 @@ cleared = pd.DataFrame({'clear': list(clear)})
 stopwords = pd.read_csv("chineseStopWords.txt", index_col=False, quoting=3, sep="\t", names=['stopword'], encoding='GBK')
 #添加额外停止词
 stopwords = add_stopword("手机",stopwords)
+stopwords = add_stopword("联想",stopwords)
 # print(str(stopwords))
 cleared = cleared[~cleared.clear.isin(stopwords.stopword)]
 #清洗数据
@@ -52,6 +53,8 @@ file3 = open("D:\\PycharmProject\\spider\\comment\\word_counting.txt",'w')
 file3.write("词频统计结果：\n")
 file3.close()
 file3 = open("D:\\PycharmProject\\spider\\comment\\word_counting.txt",'a')
-for y in count_words.head(20).values:
-    file3.write(str(y[0])+":"+str(y[1])+"\n")
+count = 0
+for y in count_words.head(400).values:
+    count = count + 1
+    file3.write(str(count) + str(y[0])+":"+str(y[1])+"\n")
 file3.close()
