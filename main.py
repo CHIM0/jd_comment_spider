@@ -1,58 +1,24 @@
-from urllib import request
-import re
+import get_list     #获取商品列表
+import get_data     #获取商品评论
+import word_cloud   #处理评论并输出结果
 
+#获取商品id列表
+goods_list_url = 'https://list.jd.com/list.html?cat=9987,653,655&ev=exprice_M2800L4499&sort=sort_rank_asc&trans=1&JL=2_1_0#J_crumbsBar'
+goods_list_spider = get_list.goods_list_Spider(goods_list_url)
+goods_list = goods_list_spider.go()
 
-class Spider():
-    url='https://www.panda.tv/cate/lol'
-    root_pattern = '<div class="video-info">([\s\S]*?)</div>'
-    name_pattern = '</i>([\s\S]*?)</span>'
-    number_pattern = '<span class="video-number">([\s\S]*?)</span>'
+# 整合txt
+txt = open("D:\\PycharmProject\\spider\\comment\\allcomment.txt","w")
+txt.close()
+txt = open("D:\\PycharmProject\\spider\\comment\\allcomment.txt","a")
+for index in range(0,10):
+    comment_data_spider = get_data.Spider(goods_list[index])
+    comment_data_spider.run()
+    txt_temp = open("D:\\PycharmProject\\spider\\comment\\"+goods_list[index]+"\\allcomment.txt","r")
+    r = txt_temp.read()
+    txt.write(r)
+txt.close()
 
-    def __fetch_content(self):
-        r = request.urlopen(Spider.url)
-        htmls = r.read()
-        htmls = str(htmls,encoding='utf-8')
-        return htmls
-
-    def __analysis(self,htmls):
-        result = re.findall(Spider.root_pattern,htmls)
-        anchors=[]
-        for html in result:
-            name = re.findall(Spider.name_pattern, html)
-            number = re.findall(Spider.number_pattern, html)
-            anchor = {'name':name,'number':number}
-            anchors.append(anchor)
-        return anchors
-
-    def __refine(self,anchors):
-        l = lambda anchor:{
-            'name':anchor['name'][0].strip(),
-            'number':anchor['number'][0]
-        }
-        return map(l,anchors)
-
-    def __sort(self,anchors):
-        anchors = sorted(anchors,key = self.__sort_seed,reverse=True)
-        return anchors
-
-    def __show(self,anchors):
-        for rank in range(0,len(anchors)):
-            print('rank '+str(rank+1)
-                  +'    : '+anchors[rank]['name']
-                  +'    '+anchors[rank]['number']+'人')
-
-    def __sort_seed(self,anchor):
-        number = float(re.findall('\d*',anchor['number'])[0])
-        if '万' in anchor['number']:
-            number *= 10000
-        return number
-
-    def go(self):
-        htmls = self.__fetch_content()
-        anchors = self.__analysis(htmls)
-        anchors = list(self.__refine(anchors))
-        anchors = self.__sort(anchors)
-        self.__show(anchors)
-
-spider = Spider()
-spider.go()
+#评论分词 生成词频统计表txt 生成基于词频的词云图 生成词频统计条形图
+word_cloud_maker =word_cloud.word_cloud_maker()
+word_cloud_maker.run()
